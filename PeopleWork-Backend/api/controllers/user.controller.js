@@ -3,8 +3,10 @@ const User = require("../models/user.model");
 // Controller for getting user profile
 exports.getUserProfile = async (req, res, next) => {
     try {
-        const userId = req.user.id; // Assuming user ID is available in req.user
-        const user = await User.findById(userId);
+        console.log("Fetching user profile...");
+        const userId = req.user._id;
+        console.log("User ID:", userId);
+        const user = await User.findOne({ _id: userId, isDeleted: false });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -17,7 +19,7 @@ exports.getUserProfile = async (req, res, next) => {
 // Controller for updating user profile
 exports.updateUserProfile = async (req, res, next) => {
     try {
-        const userId = req.user.id; // Assuming user ID is available in req.user
+        const userId = req.user._id;
         const updates = req.body;
         const user = await User.findByIdAndUpdate(userId, updates, {
             new: true,
@@ -69,7 +71,7 @@ exports.getAllUsers = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
     try {
         const userId = req.params.id;
-        const user = await User.findOne({_id: userId, });
+        const user = await User.findOne({ _id: userId });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -100,7 +102,7 @@ exports.updateUser = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
     try {
         const userId = req.params.id;
-        const user = await User.findByIdAndDelete(userId);
+        const user = await User.findByIdAndUpdate(userId, { isDeleted: true });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

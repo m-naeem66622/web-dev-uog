@@ -2,7 +2,7 @@
 
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const { generateToken } = require("../utils/jwt.util");
 const nodemailer = require("nodemailer");
 
 const otpStore = new Map(); // Temporary OTP storage
@@ -102,11 +102,7 @@ exports.loginUser = async (req, res) => {
         }
 
         // JWT Token generation
-        const token = jwt.sign(
-            { userId: user._id, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: "7d" }
-        );
+        const token = generateToken(user._id, user.role);
 
         res.status(200).json({
             message: "Login successful!",
