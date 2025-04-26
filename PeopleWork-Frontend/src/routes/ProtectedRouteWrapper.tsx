@@ -1,10 +1,10 @@
-import { ReactNode, useEffect, useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/components/AuthProvider';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { ReactNode, useEffect, useState } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthProvider";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteWrapperProps {
   children: ReactNode;
@@ -37,25 +37,28 @@ export const ProtectedRouteWrapper = ({
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-  
+
   if (!isVerified) {
     // Show email verification required message
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-2xl text-center">Email Verification Required</CardTitle>
+            <CardTitle className="text-2xl text-center">
+              Email Verification Required
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <Alert variant="destructive">
               <AlertDescription>
-                Your email is not verified. Please check your inbox and verify your email before accessing this page.
+                Your email is not verified. Please check your inbox and verify
+                your email before accessing this page.
               </AlertDescription>
             </Alert>
             <div className="text-center">
               <Button
                 variant="outline"
-                onClick={() => window.location.href = '/verification-pending'}
+                onClick={() => (window.location.href = "/verification-pending")}
               >
                 Go to Verification Page
               </Button>
@@ -67,14 +70,15 @@ export const ProtectedRouteWrapper = ({
   }
 
   const userRole = currentUser?.role;
-  
-  if (!allowedRoles.includes(userRole || '')) {
-    
+
+  if (!allowedRoles.includes(userRole || "")) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-2xl text-center">Access Denied</CardTitle>
+            <CardTitle className="text-2xl text-center">
+              Access Denied
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <Alert variant="destructive">
