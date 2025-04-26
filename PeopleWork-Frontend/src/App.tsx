@@ -1,30 +1,37 @@
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import AdminDashboard from "./pages/Admin"
-import BuyerLayout from "./pages/Buyer/BuyerLayout"
-import SellerLayout from "./pages/Seller/SellerLayout"
-
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import Dashboard from "@/pages/admin/index";
+import AuthProvider from "./context/AuthProvider";
+import { ThemeProvider } from "./components/organisms/ThemeProvider";
 const Home = () => (
-  <div className='flex justify-center items-center flex-col h-screen'>
+  <div className="flex justify-center items-center flex-col h-screen">
     <h1>Welcome to the Bidding Dashboard</h1>
     <p>Select a dashboard to view:</p>
-    <ul className='flex space-x-4 cursor-pointer font-bold'>
-      <li><Link to="/buyer">Buyer Dashboard</Link></li>
-      <li><Link to="/seller">Seller Dashboard</Link></li>
-      <li><Link to="/admin">Admin Dashboard</Link></li>
+    <ul className="flex space-x-4 cursor-pointer font-bold">
+      <li>
+        <Link to="/buyer">Buyer Dashboard</Link>
+      </li>
+      <li>
+        <Link to="/seller">Seller Dashboard</Link>
+      </li>
+      <li>
+        <Link to="/admin">Admin Dashboard</Link>
+      </li>
     </ul>
   </div>
 );
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/buyer" element={<BuyerLayout />} />
-        <Route path="/seller" element={<SellerLayout />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </Router>
+    <ThemeProvider defaultTheme="system" storageKey="peopleWork-ui-theme">
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/admin" element={<Dashboard />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
