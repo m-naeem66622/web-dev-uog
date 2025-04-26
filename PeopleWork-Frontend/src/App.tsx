@@ -4,6 +4,8 @@ import AuthProvider from "./context/AuthProvider";
 import { ThemeProvider } from "./components/organisms/ThemeProvider";
 import Home from "@/pages/common/Home";
 import Customer from "@/pages/Customer/index";
+import SkilledPeoplePage from "./pages/Customer/SkillPeopleList";
+import AppointmentsPage from "./pages/Customer/Appointments";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/customer" element={<Customer />} />
+            <Route path="/search" element={<SkilledPeoplePage />} />
+            <Route path="/appointments" element={<AppointmentsPage />} />
           </Routes>
         </Router>
       </AuthProvider>
