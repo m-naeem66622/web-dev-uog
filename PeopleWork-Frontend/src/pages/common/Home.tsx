@@ -435,7 +435,6 @@ const Page = () => {
         </div>
       </AnimatedSection>
 
-      {/* Footer with Modern Layout */}
       <footer className="bg-background/95 backdrop-blur-sm border-t border-t-border/20">
         <div className="container px-4 py-12 md:py-20">
           <div className="grid md:grid-cols-6 gap-8">

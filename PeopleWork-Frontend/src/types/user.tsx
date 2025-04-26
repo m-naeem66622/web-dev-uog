@@ -7,3 +7,11 @@ export type User = {
   isVerified: boolean;
   role: UserRole;
 };
+
+export interface UserLocation {
+  id: string;
+  name: string;
+  profession: string;
+  latitude: number;
+  longitude: number;
+}
