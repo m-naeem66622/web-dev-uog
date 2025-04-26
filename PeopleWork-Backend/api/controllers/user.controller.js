@@ -36,7 +36,7 @@ exports.updateUserProfile = async (req, res, next) => {
 // Controller for getting all users
 exports.getAllUsers = async (req, res, next) => {
     try {
-        const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit 10
+        const { page = 1, limit = 10, speciality, keyword, role } = req.query;
 
         // Convert page and limit to integers
         const pageNumber = parseInt(page, 10);
@@ -45,13 +45,36 @@ exports.getAllUsers = async (req, res, next) => {
         // Calculate the number of documents to skip
         const skip = (pageNumber - 1) * limitNumber;
 
-        // Fetch users with pagination
-        const users = await User.find({ isDeleted: false })
-            .skip(skip)
-            .limit(limitNumber);
+        // Build the query filter - always exclude admin users
+        const filter = { 
+            isDeleted: false,
+            role: { $ne: 'admin' } // Exclude admin users in all cases
+        };
 
-        // Get the total count of users
-        const totalUsers = await User.countDocuments({ isDeleted: false });
+        // Add role filter if provided
+        if (role) {
+            filter.role = role;
+        }
+
+        // Add speciality filter if provided
+        if (speciality) {
+            filter.speciality = speciality;
+        }
+
+        // Add keyword search across name, email, and address if provided
+        if (keyword) {
+            filter.$or = [
+                { name: { $regex: keyword, $options: "i" } },
+                { email: { $regex: keyword, $options: "i" } },
+                { address: { $regex: keyword, $options: "i" } },
+            ];
+        }
+
+        // Fetch users with filters and pagination
+        const users = await User.find(filter).skip(skip).limit(limitNumber);
+
+        // Get the total count of users matching the filter
+        const totalUsers = await User.countDocuments(filter);
 
         // Calculate total pages
         const totalPages = Math.ceil(totalUsers / limitNumber);
@@ -111,3 +134,5 @@ exports.deleteUser = async (req, res, next) => {
         next(error);
     }
 };
+
+// Controller for searching user

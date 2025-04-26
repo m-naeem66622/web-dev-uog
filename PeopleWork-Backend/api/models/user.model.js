@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema(
             enum: ["active", "inactive"],
         },
         isDeleted: { type: Boolean, default: false },
+        speciality: { type: String, required: false },
+        keywords: { type: String, required: false },
     },
     {
         timestamps: true,

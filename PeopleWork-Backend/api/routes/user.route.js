@@ -8,6 +8,14 @@ const UserValidation = require("../validators/user.validator");
 const authenticate = require("../middlewares/authenticate.middleware");
 const Authorize = require("../middlewares/authorize.middleware");
 
+// ------------------------ PUBLIC ROUTES -------------------------
+// Route for getting all users
+router.get(
+    "/",
+    validate(UserValidation.getAllUsersSchema, "QUERY"),
+    Controller.getAllUsers
+);
+
 // ------------------------ USER ROUTES -------------------------
 // Route for getting user profile
 router.get("/profile", authenticate, Controller.getUserProfile);
@@ -21,15 +29,6 @@ router.put(
 );
 
 // ------------------------ ADMIN ROUTES ------------------------
-// Route for getting all users
-router.get(
-    "/",
-    authenticate,
-    Authorize.isAdmin,
-    validate(CommonValidation.paginationSchema, "QUERY"),
-    Controller.getAllUsers
-);
-
 // Route for getting a user by ID
 router.get(
     "/:id",
