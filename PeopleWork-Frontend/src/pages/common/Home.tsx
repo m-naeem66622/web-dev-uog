@@ -120,7 +120,6 @@ const Page = () => {
                 <SectionTitle
                     title="How It Works"
                     subtitle="Three simple steps to find the perfect professional for your needs"
-                    size="large"
                 />
 
                 <div className="grid md:grid-cols-3 gap-8 mt-16 relative">
@@ -182,13 +181,11 @@ const Page = () => {
                 <SectionTitle
                     title="Popular Services"
                     subtitle="Browse our most requested professional services"
-                    alignment="center"
-                    size="large"
                 />
 
                 <div className="grid md:grid-cols-3 gap-12 mt-16">
                     {services.map((service, index) => (
-                        <ServiceCard key={index} {...service} index={index} />
+                        <ServiceCard key={index} {...service} />
                     ))}
                 </div>
             </AnimatedSection>
@@ -202,13 +199,11 @@ const Page = () => {
                 <SectionTitle
                     title="Featured Local Workers"
                     subtitle="Top-rated professionals in your area"
-                    alignment="center"
-                    size="large"
                 />
 
                 <div className="grid md:grid-cols-3 gap-8 mt-16">
                     {workers.map((worker, index) => (
-                        <WorkerCard key={index} {...worker} index={index} />
+                        <WorkerCard key={index} {...worker} />
                     ))}
                 </div>
 
@@ -228,9 +223,6 @@ const Page = () => {
                 <SectionTitle
                     title="Trust & Safety"
                     subtitle="We ensure quality service and secure interactions"
-                    alignment="center"
-                    size="large"
-                    inverted={true}
                 />
 
                 <div className="grid md:grid-cols-3 gap-12 mt-16">
@@ -273,8 +265,6 @@ const Page = () => {
                 <SectionTitle
                     title="What Our Customers Say"
                     subtitle="Real experiences from satisfied clients"
-                    alignment="center"
-                    size="large"
                 />
 
                 <div className="mt-16 space-y-16">
@@ -336,8 +326,6 @@ const Page = () => {
                 <SectionTitle
                     title="Why Choose Us"
                     subtitle="Benefits that set us apart"
-                    alignment="center"
-                    size="large"
                 />
 
                 <div className="relative mt-20 md:mt-32">
@@ -387,8 +375,6 @@ const Page = () => {
                 <SectionTitle
                     title="Frequently Asked Questions"
                     subtitle="Find answers to common questions about our service"
-                    alignment="center"
-                    size="large"
                 />
 
                 <div className="mt-16">
@@ -584,4 +570,3 @@ const Page = () => {
 };
 
 export default Page;
-rr;
