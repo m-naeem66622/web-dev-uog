@@ -3,7 +3,9 @@ import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
 export const RootLayout = () => (
-    <Suspense fallback={<LoadingFallback/>}>
+  <Suspense fallback={<LoadingFallback />}>
+    <div className="min-h-screen">
       <Outlet />
-    </Suspense>
-  );
+    </div>
+  </Suspense>
+);

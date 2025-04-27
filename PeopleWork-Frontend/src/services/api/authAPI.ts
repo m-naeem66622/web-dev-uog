@@ -34,6 +34,11 @@ interface ResendVerificationRequest {
   email: string;
 }
 
+interface VerifyOtpRequest {
+  email: string;
+  otp: string;
+}
+
 export const authAPI = {
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
@@ -45,7 +50,7 @@ export const authAPI = {
     const { data } = await axiosClient.post<AuthResponse>('/api/auth/login', credentials);
     
     if (data.token) {
-      storage.set('authToken', data.token);
+      storage.set('authToken', data.user?.token);
       storage.set('userRole', data.user.role);
       storage.set('user', data.user);
     }
@@ -59,9 +64,21 @@ export const authAPI = {
     });
     return data;
   },
+
+  async verifyOtp(request: VerifyOtpRequest): Promise<AuthResponse> {
+    const { data } = await axiosClient.post<AuthResponse>('/api/auth/verify-otp', request);
+    
+    if (data.token) {
+      storage.set('authToken', data.token);
+      storage.set('userRole', data.user.role);
+      storage.set('user', data.user);
+    }
+    
+    return data;
+  },
   
   async resendVerification(request: ResendVerificationRequest): Promise<{ message: string }> {
-    const { data } = await axiosClient.post('/api/auth/resend-verification', request);
+    const { data } = await axiosClient.post('/api/auth/send-otp', request);
     return data;
   },
   

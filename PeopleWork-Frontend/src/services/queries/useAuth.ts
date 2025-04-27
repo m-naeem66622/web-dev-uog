@@ -45,6 +45,13 @@ export const useAuth = () => {
     mutationFn: authAPI.verifyEmail,
   });
 
+  const verifyOtpMutation = useMutation({
+    mutationFn: authAPI.verifyOtp,
+    onSuccess: (data) => {
+      queryClient.setQueryData([AUTH_USER_CACHE_KEY], data.user);
+    },
+  });
+  
   const resendVerificationMutation = useMutation({
     mutationFn: authAPI.resendVerification,
   });
@@ -66,6 +73,7 @@ export const useAuth = () => {
     requestPasswordResetMutation,
     resetPasswordMutation,
     verifyEmailMutation,
+    verifyOtpMutation,
     resendVerificationMutation,
     logout,
   };

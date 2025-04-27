@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -12,7 +12,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -20,13 +20,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuth } from '@/components/AuthProvider';
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/context/AuthProvider";
 
 const loginFormSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email' }),
-  password: z.string().min(1, { message: 'Password is required' }),
+  email: z.string().email({ message: "Please enter a valid email" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 type LoginFormValues = z.infer<typeof loginFormSchema>;
@@ -36,25 +36,29 @@ export default function Login() {
   const location = useLocation();
   const { handleLogin } = useAuth();
   const [loginError, setLoginError] = useState<string | null>(null);
-  
+
   // Get the intended destination from location state, or default to dashboard
   const from = location.state?.from?.pathname || getDefaultRoute();
-  
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
   function getDefaultRoute() {
-    const userRole = localStorage.getItem('userRole');
-    switch(userRole) {
-      case 'admin': return '/admin';
-      case 'buyer': return '/buyer';
-      case 'seller': return '/seller';
-      default: return '/';
+    const userRole = localStorage.getItem("userRole");
+    switch (userRole) {
+      case "admin":
+        return "/admin";
+      case "customer":
+        return "/buyer";
+      case "seller":
+        return "/seller";
+      default:
+        return "/";
     }
   }
 
@@ -62,12 +66,16 @@ export default function Login() {
     try {
       setLoginError(null);
       await handleLogin(data.email, data.password);
-      
+
       // Navigate to the intended destination or role-based dashboard
       navigate(from, { replace: true });
     } catch (err: unknown) {
-      const errorMessage = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
-      setLoginError(errorMessage || 'Login failed. Please check your credentials.');
+      const errorMessage = (
+        err as { response?: { data?: { message?: string } } }
+      )?.response?.data?.message;
+      setLoginError(
+        errorMessage || "Login failed. Please check your credentials."
+      );
     }
   }
 
@@ -86,7 +94,7 @@ export default function Login() {
               <AlertDescription>{loginError}</AlertDescription>
             </Alert>
           )}
-          
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -96,13 +104,17 @@ export default function Login() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="Enter your email" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="Enter your email"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="password"
@@ -110,21 +122,28 @@ export default function Login() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Enter your password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Enter your password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                     <div className="text-right">
-                      <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+                      <Link
+                        to="/forgot-password"
+                        className="text-sm text-primary hover:underline"
+                      >
                         Forgot password?
                       </Link>
                     </div>
                   </FormItem>
                 )}
               />
-              
-              <Button 
-                type="submit" 
-                className="w-full" 
+
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting ? "Logging in..." : "Login"}
@@ -135,7 +154,10 @@ export default function Login() {
         <CardFooter className="flex justify-center">
           <p className="text-sm text-gray-500">
             Don't have an account?{" "}
-            <Link to="/register" className="text-primary font-semibold hover:underline">
+            <Link
+              to="/register"
+              className="text-primary font-semibold hover:underline"
+            >
               Register
             </Link>
           </p>

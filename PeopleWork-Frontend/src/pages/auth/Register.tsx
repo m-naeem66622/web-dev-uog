@@ -38,7 +38,7 @@ const registerFormSchema = z.object({
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
   phone: z.string().optional(),
-  requestedRole: z.enum(["customer", "seller"]),
+  role: z.enum(["customer", "seller"]),
 });
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
@@ -55,7 +55,7 @@ export default function Register() {
       email: "",
       password: "",
       phone: "",
-      requestedRole: "seller",
+      role: "seller",
     },
   });
 
@@ -158,7 +158,7 @@ export default function Register() {
 
               <FormField
                 control={form.control}
-                name="requestedRole"
+                name="role"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>I want to join as</FormLabel>
