@@ -9,7 +9,6 @@ const registerSchema = Joi.object({
     role: Joi.string().valid("seller", "customer").required(),
     address: Joi.string().trim(),
     password: Joi.string().required(),
-    otp: Joi.number().required(),
 });
 
 const requestOTPSchema = Joi.object({
