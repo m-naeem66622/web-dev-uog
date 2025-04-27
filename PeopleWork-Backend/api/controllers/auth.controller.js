@@ -22,14 +22,42 @@ function generateOtp() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// 1. Send OTP
-exports.sendOtp = async (req, res) => {
-    const { email } = req.body;
+// Register User (create account)
+exports.register = async (req, res) => {
+    const { name, phone, email, address, password } = req.body;
 
     try {
         const userExists = await User.findOne({ email });
         if (userExists) {
             return res.status(400).json({ message: "User already exists." });
+        }
+
+        const newUser = await User.create({
+            name,
+            phone,
+            email,
+            address,
+            password,
+        });
+
+        res.status(201).json({
+            message: "User registered. Please verify your email with OTP.",
+            user: newUser,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Registration failed." });
+    }
+};
+
+// Send OTP (after user exists)
+exports.sendOtp = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
         }
 
         const otp = generateOtp();
@@ -38,8 +66,8 @@ exports.sendOtp = async (req, res) => {
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
-            subject: "Your OTP for Registration",
-            text: `Your OTP is: ${otp}`,
+            subject: "Email Verification OTP",
+            text: `Your OTP for email verification is: ${otp}`,
         });
 
         res.status(200).json({ message: "OTP sent successfully!" });
@@ -49,9 +77,9 @@ exports.sendOtp = async (req, res) => {
     }
 };
 
-// 2. Verify OTP & Register
-exports.verifyOtpAndRegister = async (req, res) => {
-    const { name, phone, email, address, password, otp } = req.body;
+// Verify OTP
+exports.verifyOtp = async (req, res) => {
+    const { email, otp } = req.body;
 
     try {
         const storedOtp = otpStore.get(email);
@@ -66,27 +94,18 @@ exports.verifyOtpAndRegister = async (req, res) => {
             return res.status(400).json({ message: "Invalid OTP." });
         }
 
-        const newUser = await User.create({
-            name,
-            phone,
-            email,
-            address,
-            password,
-        });
+        await User.findOneAndUpdate({ email }, { isVerified: true });
 
         otpStore.delete(email);
 
-        res.status(201).json({
-            message: "User registered successfully!",
-            user: newUser,
-        });
+        res.status(200).json({ message: "Email verified successfully!" });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Registration failed." });
+        res.status(500).json({ message: "OTP verification failed." });
     }
 };
 
-// 3. Login
+// Login
 exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
@@ -94,6 +113,12 @@ exports.loginUser = async (req, res) => {
         const user = await User.findOne({ email, isDeleted: false });
         if (!user) {
             return res.status(400).json({ message: "Invalid credentials." });
+        }
+
+        if (!user.isVerified) {
+            return res
+                .status(400)
+                .json({ message: "Please verify your email first." });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);

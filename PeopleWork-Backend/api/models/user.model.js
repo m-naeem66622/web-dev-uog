@@ -26,9 +26,10 @@ const userSchema = new mongoose.Schema(
             default: "active",
             enum: ["active", "inactive"],
         },
-        isDeleted: { type: Boolean, default: false },
         speciality: { type: String, required: false },
         keywords: { type: String, required: false },
+        isVerified: { type: Boolean, default: false },
+        isDeleted: { type: Boolean, default: false },
     },
     {
         timestamps: true,

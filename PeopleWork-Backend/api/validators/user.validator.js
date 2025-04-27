@@ -18,6 +18,13 @@ const requestOTPSchema = Joi.object({
         .required(),
 });
 
+const verifyOTPSchema = Joi.object({
+    email: Joi.string()
+        .pattern(new RegExp(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/))
+        .required(),
+    otp: Joi.number().required(),
+});
+
 const loginSchema = Joi.object({
     email: Joi.string()
         .pattern(new RegExp(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/))
@@ -69,6 +76,7 @@ module.exports = {
     registerSchema,
     loginSchema,
     requestOTPSchema,
+    verifyOTPSchema,
     resetPasswordSchema,
     updateUserProfileSchema,
     updateUserSchema,

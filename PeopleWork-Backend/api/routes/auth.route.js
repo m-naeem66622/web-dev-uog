@@ -23,7 +23,14 @@ router.post(
 router.post(
     "/register",
     validate(UserValidation.registerSchema, "BODY"),
-    Controller.verifyOtpAndRegister
+    Controller.register
+);
+
+// Route for verifying OTP
+router.post(
+    "/verify-otp",
+    validate(UserValidation.verifyOTPSchema, "BODY"),
+    Controller.verifyOtp
 );
 
 // Route for forgot password
