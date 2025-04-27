@@ -9,11 +9,10 @@ const otpStore = new Map(); // Temporary OTP storage
 
 // Setup Nodemailer
 const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
+    service: "Gmail",
     auth: {
-        user: "dedrick.ward50@ethereal.email",
-        pass: "39kHnQjbkTjzX4xUf3",
+        user: process.env.EMAIL_USER, // your email
+        pass: process.env.EMAIL_PASS, // your email password or app password
     },
 });
 
