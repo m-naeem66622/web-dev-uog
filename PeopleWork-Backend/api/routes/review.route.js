@@ -8,7 +8,7 @@ const Authorize = require("../middlewares/authorize.middleware");
 // Create a new review
 router.post(
     "/",
-    authenticate.verifyToken,
+    authenticate,
     Authorize.isCustomer,
     Controller.createReview
 );
