@@ -9,10 +9,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigation = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,32 +84,18 @@ export const Navigation = () => {
               >
                 <DropdownMenuItem
                   className="cursor-pointer"
-                  onClick={() => console.log("Login as customer")}
+                  onClick={() => navigation("/login")}
                 >
                   <LogIn className="h-4 w-4 mr-2" />
-                  <span>Login as Customer</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() => console.log("Login as provider")}
-                >
-                  <LogIn className="h-4 w-4 mr-2" />
-                  <span>Login as Service Provider</span>
+                  <span>Login</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="cursor-pointer"
-                  onClick={() => console.log("Register as customer")}
+                  onClick={() => navigation("/register")}
                 >
                   <UserPlus className="h-4 w-4 mr-2" />
-                  <span>Register as Customer</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() => console.log("Register as provider")}
-                >
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  <span>Register as Service Provider</span>
+                  <span>Register</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
