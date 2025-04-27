@@ -6,6 +6,7 @@ import Home from "@/pages/common/Home";
 import Customer from "@/pages/Customer/index";
 import SkilledPeoplePage from "./pages/Customer/SkillPeopleList";
 import AppointmentsPage from "./pages/Customer/Appointments";
+import SellerDashboard from "./pages/Seller";
 
 function App() {
   return (
@@ -17,7 +18,11 @@ function App() {
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/customer" element={<Customer />} />
             <Route path="/search" element={<SkilledPeoplePage />} />
-            <Route path="/appointments" element={<AppointmentsPage />} />
+            <Route
+              path="/customer/appointments"
+              element={<AppointmentsPage />}
+            />
+            <Route path="/seller" element={<SellerDashboard />} />
           </Routes>
         </Router>
       </AuthProvider>
