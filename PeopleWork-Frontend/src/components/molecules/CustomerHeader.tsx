@@ -10,9 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthProvider";
 import { LogOut, Settings, User, Calendar } from "lucide-react";
 
 const Header: React.FC = () => {
+  const { handleLogout } = useAuth();
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="container flex h-16 items-center justify-between py-4">
@@ -90,7 +92,7 @@ const Header: React.FC = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Logout</span>
+                <span onClick={handleLogout}>Logout</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

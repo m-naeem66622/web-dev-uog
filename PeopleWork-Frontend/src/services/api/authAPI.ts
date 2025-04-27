@@ -83,12 +83,12 @@ export const authAPI = {
   },
   
   async requestPasswordReset(request: PasswordResetRequest): Promise<{ message: string }> {
-    const { data } = await axiosClient.post('/api/auth/forgot-password', request);
+    const { data } = await axiosClient.post('/api/auth/forgot', request);
     return data;
   },
   
   async resetPassword(resetData: ResetPasswordRequest): Promise<{ message: string }> {
-    const { data } = await axiosClient.post('/api/auth/reset-password', resetData);
+    const { data } = await axiosClient.post('/api/auth/reset', resetData);
     return data;
   },
   
