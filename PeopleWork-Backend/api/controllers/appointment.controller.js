@@ -1,7 +1,7 @@
 const Appointment = require("../models/Appointment");
 
 // Create Appointment
-const createAppointment = async (req, res) => {
+exports.createAppointment = async (req, res) => {
     try {
         const { seller, serviceType, appointmentDate, notes } = req.body;
         const customer = req.user._id; // Assuming user info is added by auth middleware
@@ -21,20 +21,43 @@ const createAppointment = async (req, res) => {
 };
 
 // Get All Appointments (Admin use - optional)
-const getAllAppointments = async (req, res) => {
+exports.getAllAppointments = async (req, res) => {
     try {
+        // Extract pagination parameters from query string
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        // Get total count for pagination metadata
+        const totalAppointments = await Appointment.countDocuments({
+            isDeleted: false,
+        });
+
+        // Get appointments with pagination
         const appointments = await Appointment.find({ isDeleted: false })
             .populate("customer", "name email phone")
-            .populate("seller", "name speciality email phone");
+            .populate("seller", "name speciality email phone")
+            .skip(skip)
+            .limit(limit);
 
-        res.status(200).json({ success: true, data: appointments });
+        res.status(200).json({
+            success: true,
+            message: "Appointments fetched successfully",
+            data: appointments,
+            pagination: {
+                totalAppointments,
+                totalPages: Math.ceil(totalAppointments / limit),
+                currentPage: page,
+                limit,
+            },
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
 
 // Get Single Appointment by ID
-const getAppointmentById = async (req, res) => {
+exports.getAppointmentById = async (req, res) => {
     try {
         const appointment = await Appointment.findOne({
             _id: req.params.id,
@@ -56,7 +79,7 @@ const getAppointmentById = async (req, res) => {
 };
 
 // Update Appointment (Only status and notes usually allowed)
-const updateAppointment = async (req, res) => {
+exports.updateAppointment = async (req, res) => {
     try {
         const { status, notes } = req.body;
 
@@ -79,7 +102,7 @@ const updateAppointment = async (req, res) => {
 };
 
 // Soft Delete Appointment
-const deleteAppointment = async (req, res) => {
+exports.deleteAppointment = async (req, res) => {
     try {
         const appointment = await Appointment.findByIdAndUpdate(
             req.params.id,
@@ -100,12 +123,4 @@ const deleteAppointment = async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-};
-
-module.exports = {
-    createAppointment,
-    getAllAppointments,
-    getAppointmentById,
-    updateAppointment,
-    deleteAppointment,
 };

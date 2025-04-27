@@ -3,14 +3,19 @@ const User = require("../models/user.model");
 // Controller for getting user profile
 exports.getUserProfile = async (req, res, next) => {
     try {
-        console.log("Fetching user profile...");
         const userId = req.user._id;
-        console.log("User ID:", userId);
         const user = await User.findOne({ _id: userId, isDeleted: false });
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res
+                .status(404)
+                .json({ success: false, message: "User not found" });
         }
-        res.status(200).json(user);
+
+        res.status(200).json({
+            success: true,
+            message: "User profile fetched successfully",
+            data: user,
+        });
     } catch (error) {
         next(error);
     }
@@ -25,9 +30,16 @@ exports.updateUserProfile = async (req, res, next) => {
             new: true,
         });
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res
+                .status(404)
+                .json({ success: false, message: "User not found" });
         }
-        res.status(200).json(user);
+
+        res.status(200).json({
+            success: true,
+            message: "User profile updated successfully",
+            data: user,
+        });
     } catch (error) {
         next(error);
     }
@@ -45,23 +57,10 @@ exports.getAllUsers = async (req, res, next) => {
         // Calculate the number of documents to skip
         const skip = (pageNumber - 1) * limitNumber;
 
-        // Build the query filter - always exclude admin users
-        const filter = { 
-            isDeleted: false,
-            role: { $ne: 'admin' } // Exclude admin users in all cases
-        };
+        const filter = { isDeleted: false, role: { $ne: "admin" } };
 
-        // Add role filter if provided
-        if (role) {
-            filter.role = role;
-        }
-
-        // Add speciality filter if provided
-        if (speciality) {
-            filter.speciality = speciality;
-        }
-
-        // Add keyword search across name, email, and address if provided
+        if (role) filter.role = role;
+        if (speciality) filter.speciality = speciality;
         if (keyword) {
             filter.$or = [
                 { name: { $regex: keyword, $options: "i" } },
@@ -80,10 +79,15 @@ exports.getAllUsers = async (req, res, next) => {
         const totalPages = Math.ceil(totalUsers / limitNumber);
 
         res.status(200).json({
-            users,
-            totalUsers,
-            totalPages,
-            currentPage: pageNumber,
+            success: true,
+            message: "Users fetched successfully",
+            data: { users },
+            pagination: {
+                totalUsers,
+                totalPages,
+                currentPage: pageNumber,
+                limit,
+            },
         });
     } catch (error) {
         next(error);
@@ -96,9 +100,16 @@ exports.getUserById = async (req, res, next) => {
         const userId = req.params.id;
         const user = await User.findOne({ _id: userId });
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res
+                .status(404)
+                .json({ success: false, message: "User not found" });
         }
-        res.status(200).json(user);
+
+        res.status(200).json({
+            success: true,
+            message: "User fetched successfully",
+            data: user,
+        });
     } catch (error) {
         next(error);
     }
@@ -113,9 +124,16 @@ exports.updateUser = async (req, res, next) => {
             new: true,
         });
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res
+                .status(404)
+                .json({ success: false, message: "User not found" });
         }
-        res.status(200).json(user);
+
+        res.status(200).json({
+            success: true,
+            message: "User updated successfully",
+            data: user,
+        });
     } catch (error) {
         next(error);
     }
@@ -127,12 +145,16 @@ exports.deleteUser = async (req, res, next) => {
         const userId = req.params.id;
         const user = await User.findByIdAndUpdate(userId, { isDeleted: true });
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res
+                .status(404)
+                .json({ success: false, message: "User not found" });
         }
-        res.status(200).json({ message: "User deleted successfully" });
+
+        res.status(200).json({
+            success: true,
+            message: "User deleted successfully",
+        });
     } catch (error) {
         next(error);
     }
 };
-
-// Controller for searching user
